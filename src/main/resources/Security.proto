@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated.Security";
+option java_outer_classname = "SecurityServiceImpl";
+
+package Security;
+
+service SecurityService {
+
+  rpc lockDoor(LockRequest) returns (  LockRequestResponse) {}
+
+  rpc unlockDoor(UnlockRequest) returns ( UnlockRequestResponse) {}
+
+  rpc clockInquery( stream ClockInRequest) returns (stream ClockInResponse){}
+
+}
+
+
+message LockRequest{
+  int32 doorID = 1;
+  string location = 2;
+}
+
+message LockRequestResponse{
+
+  string status = 1;//shows the "Door Locked "
+}
+//Message for unlock request
+message UnlockRequest{
+  int32 doorID = 1;
+  string location = 2;
+}
+
+//Message for unlock request
+message UnlockRequestResponse{
+
+  string status = 1;//shows the "Door is unlocked "
+}
+
+// Message for clock-in request
+message ClockInRequest {
+  int32 staff_id = 1;
+}
+
+// Message for clock-in response
+message ClockInResponse {
+  int32 staff_id = 1;
+  string name = 2;
+  string clock_in_time = 3;
+}

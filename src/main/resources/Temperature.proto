@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated.Temperature";
+option java_outer_classname = "TemperatureServiceImpl";
+
+package Temperature;
+
+
+service TemperatureService {
+
+
+  rpc getTemperature(SwitchRequest) returns ( stream SwitchRequestResponse) {}
+
+
+  rpc setTemperature(SetRequest) returns (SetRequestResponse  ) {}
+
+
+
+}
+
+message SwitchRequest {
+
+  bool lightOnOff = 1;
+
+}
+
+message SwitchRequestResponse {
+
+  int32 degrees = 1;//This is the temperature number
+  string measure  = 2; //This is the measure in Degrees or Fahrenheit
+
+}
+
+message SetRequest{
+
+  int32 tempNumber = 1;//This is the degree of temperature one would like to set
+}
+
+message SetRequestResponse {
+
+  string SettempResponse=1;
+
+}
