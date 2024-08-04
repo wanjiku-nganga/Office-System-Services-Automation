@@ -4,6 +4,8 @@ package ds;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
@@ -42,6 +44,32 @@ public class TemperatureServer extends TemperatureServiceGrpc.TemperatureService
 
             e.printStackTrace();
         }
+    }
+    public void getTemperature(SwitchRequest request, StreamObserver<SwitchRequestResponse> responseObserver) {
+        for (int i = 0; i < 10; i++) {
+            try {
+                TimeUnit.SECONDS.sleep(2); // Setting waiting time to 2 seconds for the purposes of testing
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            int currentTemperature = getCurrentTemperature(); // Get current temperature dynamically
+            SwitchRequestResponse response = SwitchRequestResponse.newBuilder()
+                    .setDegrees(currentTemperature)
+                    .setMeasure("Celsius")
+                    .build();
+            responseObserver.onNext(response); // Send temperature update
+        }
+        responseObserver.onCompleted(); // Complete the streaming
+    }
+
+    // Method to get the current temperature and generate random numbers between 10 and 30
+    private Random random = new Random();
+    private int getCurrentTemperature() {
+        //Min and Max Temp
+        int minTemp =10;
+        int maxTemp=30;
+        // Obtain temperature
+        return random.nextInt(maxTemp-minTemp+1)+ minTemp;
     }
 
 }
