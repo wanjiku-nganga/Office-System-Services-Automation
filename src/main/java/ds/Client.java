@@ -34,19 +34,19 @@ public class Client {
                 .usePlaintext()
                 .build();
 
-        // Non-blocking stub for client streaming and Bidirectional rpc
+        // Non-blocking stub for client streaming, Bidirectional and server streaming rpcs
         registryasyncStub = RegistryServiceGrpc.newStub(registryChannel);
         securityasyncStub=SecurityServiceGrpc.newStub(securityChannel);
         tempasyncStub=TemperatureServiceGrpc.newStub(tempChannel);
 
-        //Blocking Stubs for Unary and Server Streaming RPC
+        //Blocking Stubs for Unary RPC
         securityBlockingStub=SecurityServiceGrpc.newBlockingStub(securityChannel);
 
         // Testing the different method implementations
         //uploadDocuments(registryasyncStub);//Client Streaming method
         //clockInQuery(securityasyncStub);//Bi-directional streaming
-        //lockDoor(securityBlockingStub);//Unary
-        getTemperature(tempasyncStub);
+        lockDoor(securityBlockingStub);//Unary
+       // getTemperature(tempasyncStub);//Server-Streaming
 
         // Shutting down channels
        registryChannel.shutdown();
