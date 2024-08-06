@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated.Registry";
+option java_outer_classname = "RegistryServiceImpl";
+
+package Registry;
+
+service RegistryService {
+
+  rpc uploadDocuments( stream UploadRequest) returns (  UploadResponse) {}
+
+  rpc getInkStatus(InkLevelRequest) returns ( InkLevelResponse) {}
+
+
+}
+
+message UploadRequest{
+  int32 registryID = 1;
+  string fileName = 2;
+}
+
+message UploadResponse{
+
+  string validation = 1;//shows the "Upload Success "
+}
+
+message InkLevelRequest{
+  int32 printerID = 1;
+  string printerName=2;
+
+}
+
+message InkLevelResponse{
+  string printerName=1;
+  int32  printerID=2;
+  string inkLevel = 3;//shows the "The current ink level is  "
+}

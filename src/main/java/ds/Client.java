@@ -1,5 +1,8 @@
 package ds;
 import generated.Security.*;
+import generated.Temperature.SwitchRequest;
+import generated.Temperature.SwitchRequestResponse;
+import generated.Temperature.TemperatureServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -17,6 +20,7 @@ public class Client {
     private static RegistryServiceGrpc.RegistryServiceStub registryasyncStub;
     private static SecurityServiceGrpc.SecurityServiceStub securityasyncStub;
     private static SecurityServiceGrpc.SecurityServiceBlockingStub securityBlockingStub;
+    private static TemperatureServiceGrpc.TemperatureServiceStub tempasyncStub;
 
     public static void main(String[] args) {
         ManagedChannel registryChannel = ManagedChannelBuilder
@@ -26,22 +30,28 @@ public class Client {
         ManagedChannel securityChannel = ManagedChannelBuilder.forAddress("localhost", 50059)
                 .usePlaintext()
                 .build();
+        ManagedChannel tempChannel=ManagedChannelBuilder.forAddress("localhost",50060)
+                .usePlaintext()
+                .build();
 
         // Non-blocking stub for client streaming and Bidirectional rpc
         registryasyncStub = RegistryServiceGrpc.newStub(registryChannel);
         securityasyncStub=SecurityServiceGrpc.newStub(securityChannel);
+        tempasyncStub=TemperatureServiceGrpc.newStub(tempChannel);
 
         //Blocking Stubs for Unary and Server Streaming RPC
         securityBlockingStub=SecurityServiceGrpc.newBlockingStub(securityChannel);
 
         // Testing the different method implementations
-        uploadDocuments(registryasyncStub);//Client Streaming method
-        clockInQuery(securityasyncStub);//Bi-directional streaming
-        lockDoor(securityBlockingStub);//Unary
+        //uploadDocuments(registryasyncStub);//Client Streaming method
+        //clockInQuery(securityasyncStub);//Bi-directional streaming
+        //lockDoor(securityBlockingStub);//Unary
+        getTemperature(tempasyncStub);
 
         // Shutting down channels
        registryChannel.shutdown();
        securityChannel.shutdown();
+       tempChannel.shutdown();
     }
 
     //Client Streaming Method that allows for the uploading of multiple documents all at once to the registry
@@ -151,7 +161,42 @@ public class Client {
         }
     }
 
-    //Server Streaming temperature that allows for hourly temperature updates during the day
 
+    // Server Streaming temperature that allows for hourly temperature updates during the day
+    public static void getTemperature(TemperatureServiceGrpc.TemperatureServiceStub tempasyncStub) {
+
+        SwitchRequest request = SwitchRequest.newBuilder().build();
+
+        // Create the stream observer for the responses
+        StreamObserver<SwitchRequestResponse> responseObserver = new StreamObserver<SwitchRequestResponse>() {
+            @Override
+            public void onNext(SwitchRequestResponse response) {
+                // Print the received temperature update
+                System.out.println("Received temperature: " + response.getDegrees() + " " + response.getMeasure());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                // Handle any errors
+                t.printStackTrace();
+            }
+
+            @Override
+            public void onCompleted() {
+                // Notify when the stream has been completed
+                System.out.println("Temperature streaming completed.");
+            }
+        };
+
+        // Call the getTemperature method to start receiving updates
+        tempasyncStub.getTemperature(request, responseObserver);
+
+        // Keep the client alive to receive responses
+        try {
+            Thread.sleep(600000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
