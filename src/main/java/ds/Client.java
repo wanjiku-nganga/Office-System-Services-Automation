@@ -17,10 +17,10 @@ import java.time.LocalTime;
  */
 public class Client {
     private static RegistryServiceGrpc.RegistryServiceBlockingStub registryblockingStub;
-    private static RegistryServiceGrpc.RegistryServiceStub registryasyncStub;
-    private static SecurityServiceGrpc.SecurityServiceStub securityasyncStub;
-    private static SecurityServiceGrpc.SecurityServiceBlockingStub securityBlockingStub;
-    private static TemperatureServiceGrpc.TemperatureServiceStub tempasyncStub;
+    public static RegistryServiceGrpc.RegistryServiceStub registryasyncStub;
+    public static SecurityServiceGrpc.SecurityServiceStub securityasyncStub;
+    public static SecurityServiceGrpc.SecurityServiceBlockingStub securityBlockingStub;
+    public static TemperatureServiceGrpc.TemperatureServiceStub tempasyncStub;
 
     public static void main(String[] args) {
         ManagedChannel registryChannel = ManagedChannelBuilder
