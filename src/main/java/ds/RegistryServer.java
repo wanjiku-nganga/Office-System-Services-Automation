@@ -24,7 +24,6 @@ import io.grpc.stub.StreamObserver;
 public class RegistryServer extends RegistryServiceGrpc.RegistryServiceImplBase {
     public static void main(String[] args) {
         RegistryServer registryServer = new RegistryServer();
-
         int port = 50058;
 
         try {

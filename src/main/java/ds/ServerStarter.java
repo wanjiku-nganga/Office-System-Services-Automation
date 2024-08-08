@@ -61,6 +61,7 @@ public class ServerStarter {
             temperature.awaitTermination();
             registry.awaitTermination();
 
+            //Error handling 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

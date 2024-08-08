@@ -28,12 +28,13 @@ public class Client {
     public static TemperatureServiceGrpc.TemperatureServiceStub tempasyncStub;
 
     public static void main(String[] args) throws IOException {
+        //Creating a jmdns instance
         JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
-
+        //Service registration
         ServiceInfo registryServiceInfo = jmdns.getServiceInfo("_grpc._tcp.local.", "RegistryService");
         ServiceInfo securityServiceInfo = jmdns.getServiceInfo("_grpc._tcp.local.", "SecurityService");
         ServiceInfo temperatureServiceInfo = jmdns.getServiceInfo("_grpc._tcp.local.", "TemperatureService");
-
+        //Defintion and creation of channels
         ManagedChannel registryChannel = ManagedChannelBuilder
                 .forAddress("localhost", 50058)
                 .usePlaintext()

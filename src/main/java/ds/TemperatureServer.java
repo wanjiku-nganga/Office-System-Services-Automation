@@ -43,6 +43,7 @@ public class TemperatureServer extends TemperatureServiceGrpc.TemperatureService
             jmDNS.unregisterAllServices();
 
 
+        //Error handling
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -51,6 +52,7 @@ public class TemperatureServer extends TemperatureServiceGrpc.TemperatureService
             e.printStackTrace();
         }
     }
+    //Method to get temperature
     public void getTemperature(SwitchRequest request, StreamObserver<SwitchRequestResponse> responseObserver) {
         for (int i = 0; i < 10; i++) {
             try {
@@ -58,7 +60,7 @@ public class TemperatureServer extends TemperatureServiceGrpc.TemperatureService
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            int currentTemperature = getCurrentTemperature(); // Get current temperature dynamically
+            int currentTemperature = getCurrentTemperature(); // Get current temperature
             SwitchRequestResponse response = SwitchRequestResponse.newBuilder()
                     .setDegrees(currentTemperature)
                     .setMeasure("Celsius")

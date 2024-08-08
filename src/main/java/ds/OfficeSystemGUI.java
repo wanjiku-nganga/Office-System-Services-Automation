@@ -231,6 +231,7 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
         }
     }
 
+    //Defining the clock in query bi directional service
     private void clockInQuery() {
         StreamObserver<ClockInResponse> responseObserver = new StreamObserver<ClockInResponse>() {
             @Override
@@ -264,7 +265,7 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
-
+    //Defining the server streaming temperature update method
     private void startTemperatureUpdates() {
         SwitchRequest request = SwitchRequest.newBuilder().build();
 
@@ -291,6 +292,7 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
         new Timer(600000, e -> tempChannel.shutdown()).start(); // Shutdown channel after 10 minutes
     }
 
+    //Definition of the unary lock door method
     private void lockDoor() {
         String location = "Server Room Door - Private Floor";
         LockRequest request = LockRequest.newBuilder().setLocation(location).build();
