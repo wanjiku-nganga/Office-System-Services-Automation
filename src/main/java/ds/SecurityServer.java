@@ -2,12 +2,14 @@ package ds;
 
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
-
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
 import generated.Security.*;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -23,17 +25,27 @@ public class SecurityServer extends SecurityServiceGrpc.SecurityServiceImplBase 
         int port=50059;
 
         try {
-
-
+            //Creating and starting the server
             Server server = ServerBuilder.forPort(port)
                     .addService(securityServer)
                     .build()
                     .start();
-
-
             System.out.println(LocalTime.now().toString() + ": Security Server started, listening on " + port);
 
+            //JMDNS Service Registration
+            //Create a jmdns instance
+            JmDNS jmDNS=JmDNS.create(InetAddress.getLocalHost());
+            System.out.println("Registration: InetAddress.getLocalHost():" + InetAddress.getLocalHost());
+            //Register a service
+            ServiceInfo serviceInfo=ServiceInfo.create("_securityservice_grpc.tcp.local.","Security Service",port,"gRPC Security Service");
+            jmDNS.registerService(serviceInfo);
+            System.out.println("Service has been registered with JMDNS " + serviceInfo.getName());
+
+            //Terminating the server
             server.awaitTermination();
+
+            //De-registering JMDNS services upon shutdown
+            jmDNS.unregisterAllServices();
 
 
         } catch (IOException e) {

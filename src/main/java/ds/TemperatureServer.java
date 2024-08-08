@@ -2,6 +2,7 @@ package ds;
 
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.time.LocalTime;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -10,6 +11,9 @@ import generated.Temperature.*;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
 
 /**
  * @author Sylvia
@@ -20,17 +24,26 @@ public class TemperatureServer extends TemperatureServiceGrpc.TemperatureService
         TemperatureServer temperatureServer=new TemperatureServer();
         int port = 50060;
         try {
-
-
+            //Create and Start Server
             Server server = ServerBuilder.forPort(port)
                     .addService(temperatureServer)
                     .build()
                     .start();
-
-
             System.out.println(LocalTime.now().toString() + ": Temperature Server started, listening on " + port);
 
+            // jMDNS Registration
+            //Create a jmdns instance
+            JmDNS jmDNS=JmDNS.create(InetAddress.getLocalHost());
+            System.out.println("Registration: InetAddress.getLocalHost():" + InetAddress.getLocalHost());
+            //Register a service
+            ServiceInfo serviceInfo=ServiceInfo.create("_temperatureservice_grpc.tcp.local.","Temperature Service",port,"gRPC Temperature Service");
+            jmDNS.registerService(serviceInfo);
+            System.out.println("Service has been registered with JMNDS" + serviceInfo.getName());
+
+            //Terminating server
             server.awaitTermination();
+            //De-registering the services after shutdown
+            jmDNS.unregisterAllServices();
 
 
         } catch (IOException e) {

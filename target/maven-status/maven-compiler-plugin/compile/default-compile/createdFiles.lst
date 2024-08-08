@@ -14,7 +14,6 @@ generated\Security\SecurityServiceImpl$1.class
 generated\Registry\RegistryServiceGrpc$RegistryServiceBlockingStub.class
 generated\Temperature\SetRequestResponse$Builder.class
 generated\Temperature\SetRequest.class
-ds\OfficeSystemGUI$5.class
 ds\RegistryServer.class
 ds\TemperatureServer.class
 generated\Temperature\TemperatureServiceGrpc$TemperatureServiceMethodDescriptorSupplier.class
@@ -31,7 +30,6 @@ ds\Client$1.class
 generated\Registry\RegistryServiceGrpc$RegistryServiceStub.class
 generated\Temperature\SetRequest$1.class
 generated\Registry\RegistryServiceGrpc$RegistryServiceFutureStub.class
-ds\OfficeSystemGUI$6.class
 generated\Security\UnlockRequestResponseOrBuilder.class
 generated\Temperature\SetRequestResponseOrBuilder.class
 generated\Registry\InkLevelResponse.class
@@ -64,7 +62,6 @@ generated\Registry\RegistryServiceGrpc$RegistryServiceMethodDescriptorSupplier.c
 generated\Registry\RegistryServiceGrpc.class
 generated\Security\ClockInRequest$Builder.class
 ds\Client$2.class
-ds\OfficeSystemGUI$4.class
 generated\Temperature\TemperatureServiceGrpc$TemperatureServiceStub.class
 generated\Security\LockRequest$Builder.class
 generated\Security\SecurityServiceGrpc$SecurityServiceFileDescriptorSupplier.class
@@ -73,7 +70,6 @@ org\example\Main.class
 generated\Temperature\TemperatureServiceGrpc$TemperatureServiceBaseDescriptorSupplier.class
 generated\Security\LockRequestOrBuilder.class
 ds\SecurityServer.class
-ds\OfficeSystemGUI$7.class
 generated\Registry\RegistryServiceImpl$1.class
 generated\Registry\UploadResponseOrBuilder.class
 generated\Temperature\SetRequestOrBuilder.class
