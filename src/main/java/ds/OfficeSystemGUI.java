@@ -7,11 +7,18 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Iterator;
+import javax.jmdns.ServiceInfo;
+import javax.jmdns.ServiceListener;
 
 public class OfficeSystemGUI extends JFrame implements ActionListener {
 
@@ -101,10 +108,71 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
         securityBlockingStub = SecurityServiceGrpc.newBlockingStub(securityChannel);
         tempasyncStub = TemperatureServiceGrpc.newStub(tempChannel);
 
+        //Setting up services Discovery using jmdns
+        discoverServices();
         // Set the frame to be visible
         setVisible(true);
     }
 
+    public void discoverServices(){
+        try {
+            JmDNS jmDNS=JmDNS.create(InetAddress.getLocalHost());
+
+            //Adding listeners of each service as defined in the rpc
+            jmDNS.addServiceListener("_registryservice._grpc._tcp.local.", new ServiceListenerImpl("RegistryService"));
+            jmDNS.addServiceListener("_securityservice._grpc._tcp.local.", new ServiceListenerImpl("SecurityService"));
+            jmDNS.addServiceListener("_temperatureservice._grpc._tcp.local.", new ServiceListenerImpl("TemperatureService"));
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private class ServiceListenerImpl implements ServiceListener{
+        private final String serviceType;
+        public ServiceListenerImpl(String serviceType){
+            this.serviceType=serviceType;
+        }
+
+        @Override
+        public void serviceAdded(ServiceEvent event) {
+            System.out.println("Service added : "+ event.getInfo());
+        }
+
+        @Override
+        public void serviceRemoved(ServiceEvent event) {
+            System.out.println("Service removed : "+ event.getInfo());
+        }
+
+        @Override
+        public void serviceResolved(ServiceEvent event) {
+            ServiceInfo info =event.getInfo();
+            String host=info.getHostAddresses()[0];
+            int port=info.getPort();
+            System.out.println("Resolved service : " + serviceType + " at " + host + " : " + port);
+
+            //Initializing gRPC channels and Stubs
+            switch (serviceType){
+                case "Registry Service":
+                    registryChannel = ManagedChannelBuilder.forAddress("localhost", 50058).usePlaintext().build();
+                    registryasyncStub = RegistryServiceGrpc.newStub(registryChannel);
+                    break;
+                case " Security Service ":
+                    securityChannel = ManagedChannelBuilder.forAddress("localhost", 50059).usePlaintext().build();
+                    securityasyncStub = SecurityServiceGrpc.newStub(securityChannel);
+                    securityBlockingStub = SecurityServiceGrpc.newBlockingStub(securityChannel);
+                    break;
+                case " Temperature Service ":
+                    tempChannel = ManagedChannelBuilder.forAddress("localhost", 50060).usePlaintext().build();
+                    tempasyncStub = TemperatureServiceGrpc.newStub(tempChannel);
+                    break;
+
+            }
+
+
+
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton button = (JButton) e.getSource();

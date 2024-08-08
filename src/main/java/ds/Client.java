@@ -43,10 +43,10 @@ public class Client {
         securityBlockingStub=SecurityServiceGrpc.newBlockingStub(securityChannel);
 
         // Testing the different method implementations
-        //uploadDocuments(registryasyncStub);//Client Streaming method
-        //clockInQuery(securityasyncStub);//Bi-directional streaming
+        uploadDocuments(registryasyncStub);//Client Streaming method
+        clockInQuery(securityasyncStub);//Bi-directional streaming
         lockDoor(securityBlockingStub);//Unary
-       // getTemperature(tempasyncStub);//Server-Streaming
+       getTemperature(tempasyncStub);//Server-Streaming
 
         // Shutting down channels
        registryChannel.shutdown();
