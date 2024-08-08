@@ -1,6 +1,4 @@
 package ds;
-
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.time.LocalTime;
@@ -14,7 +12,6 @@ import io.grpc.stub.StreamObserver;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
-
 /**
  * @author Sylvia
  */

@@ -10,6 +10,11 @@ import generated.Registry.UploadRequest;
 import generated.Registry.UploadResponse;
 import generated.Registry.RegistryServiceGrpc;
 
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalTime;
 
 /**
@@ -22,7 +27,13 @@ public class Client {
     public static SecurityServiceGrpc.SecurityServiceBlockingStub securityBlockingStub;
     public static TemperatureServiceGrpc.TemperatureServiceStub tempasyncStub;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+
+        ServiceInfo registryServiceInfo = jmdns.getServiceInfo("_grpc._tcp.local.", "RegistryService");
+        ServiceInfo securityServiceInfo = jmdns.getServiceInfo("_grpc._tcp.local.", "SecurityService");
+        ServiceInfo temperatureServiceInfo = jmdns.getServiceInfo("_grpc._tcp.local.", "TemperatureService");
+
         ManagedChannel registryChannel = ManagedChannelBuilder
                 .forAddress("localhost", 50058)
                 .usePlaintext()
@@ -46,7 +57,7 @@ public class Client {
         uploadDocuments(registryasyncStub);//Client Streaming method
         clockInQuery(securityasyncStub);//Bi-directional streaming
         lockDoor(securityBlockingStub);//Unary
-       getTemperature(tempasyncStub);//Server-Streaming
+        getTemperature(tempasyncStub);//Server-Streaming
 
         // Shutting down channels
        registryChannel.shutdown();

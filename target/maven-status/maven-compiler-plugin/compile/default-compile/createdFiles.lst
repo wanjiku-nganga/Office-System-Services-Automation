@@ -7,6 +7,7 @@ generated\Temperature\TemperatureServiceGrpc$1.class
 generated\Registry\InkLevelRequest$Builder.class
 generated\Security\LockRequest$1.class
 generated\Temperature\SwitchRequestResponse.class
+ds\ServerStarter.class
 generated\Security\SecurityServiceGrpc$SecurityServiceFutureStub.class
 generated\Registry\InkLevelResponse$Builder.class
 generated\Security\SecurityServiceGrpc$SecurityServiceBlockingStub.class

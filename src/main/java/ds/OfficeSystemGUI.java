@@ -1,12 +1,10 @@
 package ds;
-
 import generated.Registry.*;
 import generated.Security.*;
 import generated.Temperature.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.swing.*;
@@ -96,8 +94,6 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
         add(securityPanel, BorderLayout.AFTER_LINE_ENDS);
         add(temperaturePanel, BorderLayout.SOUTH);
 
-
-
         // Initialize GRPC Channels and Stubs
         registryChannel = ManagedChannelBuilder.forAddress("localhost", 50058).usePlaintext().build();
         securityChannel = ManagedChannelBuilder.forAddress("localhost", 50059).usePlaintext().build();
@@ -116,6 +112,7 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
 
     public void discoverServices(){
         try {
+            //Creating a JmDNS Instance.
             JmDNS jmDNS=JmDNS.create(InetAddress.getLocalHost());
 
             //Adding listeners of each service as defined in the rpc
