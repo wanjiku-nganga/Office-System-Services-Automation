@@ -9,6 +9,12 @@ import io.grpc.ServerBuilder;
 /**
  * @author Sylvia
  */
+/*
+* This class has been created for the sole purpose
+* of running all the servers at once.
+* The server have been registered using JmDNS and the
+* discovery method defined in th GUI
+* */
 public class ServerStarter {
     public static void main(String[] args) {
         try {

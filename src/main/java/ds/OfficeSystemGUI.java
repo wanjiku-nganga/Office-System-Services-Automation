@@ -192,7 +192,7 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
                 break;
         }
     }
-
+//Defining the upload documents method which is a client streaming service
     private void uploadDocuments() {
         StreamObserver<UploadResponse> responseObserver = new StreamObserver<UploadResponse>() {
             @Override
