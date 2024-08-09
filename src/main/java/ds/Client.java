@@ -3,8 +3,7 @@ import generated.Security.*;
 import generated.Temperature.SwitchRequest;
 import generated.Temperature.SwitchRequestResponse;
 import generated.Temperature.TemperatureServiceGrpc;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 import generated.Registry.UploadRequest;
 import generated.Registry.UploadResponse;
@@ -34,16 +33,23 @@ public class Client {
         ServiceInfo registryServiceInfo = jmdns.getServiceInfo("_grpc._tcp.local.", "RegistryService");
         ServiceInfo securityServiceInfo = jmdns.getServiceInfo("_grpc._tcp.local.", "SecurityService");
         ServiceInfo temperatureServiceInfo = jmdns.getServiceInfo("_grpc._tcp.local.", "TemperatureService");
+
+        // Create the authentication interceptor
+        ClientInterceptor authInterceptor = new AuthClientInterceptor();
+
         //Defintion and creation of channels
         ManagedChannel registryChannel = ManagedChannelBuilder
                 .forAddress("localhost", 50058)
                 .usePlaintext()
+                .intercept(authInterceptor)
                 .build();
         ManagedChannel securityChannel = ManagedChannelBuilder.forAddress("localhost", 50059)
                 .usePlaintext()
+                .intercept(authInterceptor)
                 .build();
         ManagedChannel tempChannel=ManagedChannelBuilder.forAddress("localhost",50060)
                 .usePlaintext()
+                .intercept(authInterceptor)
                 .build();
 
         // Non-blocking stub for client streaming, Bidirectional and server streaming rpcs
@@ -208,6 +214,32 @@ public class Client {
             Thread.sleep(600000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    //Inteceptor Implementation to add authentication to the grpc request
+    public static class AuthClientInterceptor implements ClientInterceptor {
+
+        //Defining authorisation key and token to be used
+        private static final String AUTHORIZATION_HEADER = "Authorization";
+        private static final String TOKEN = "Office-System-token";
+
+        @Override
+        public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(
+                MethodDescriptor<ReqT, RespT> method,
+                CallOptions callOptions,
+                Channel next) {
+            //Creating new client call
+            ClientCall<ReqT, RespT> call = next.newCall(method, callOptions);
+            //Returning a forwarding call to add the authentication headers
+            return new ForwardingClientCall.SimpleForwardingClientCall<ReqT, RespT>(call) {
+                @Override
+                public void start(Listener<RespT> responseListener, Metadata headers) {
+                    // Add the authorization header
+                    headers.put(Metadata.Key.of(AUTHORIZATION_HEADER, Metadata.ASCII_STRING_MARSHALLER), TOKEN);
+                    super.start(responseListener, headers);
+                }
+            };
         }
     }
 

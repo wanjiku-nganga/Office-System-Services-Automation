@@ -2,8 +2,7 @@ package ds;
 import generated.Registry.*;
 import generated.Security.*;
 import generated.Temperature.*;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
@@ -37,6 +36,9 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
     private SecurityServiceGrpc.SecurityServiceStub securityasyncStub;
     private SecurityServiceGrpc.SecurityServiceBlockingStub securityBlockingStub;
     private TemperatureServiceGrpc.TemperatureServiceStub tempasyncStub;
+
+    //Creating an Authenticator Instance
+    ClientInterceptor authInterceptor = new AuthClientInterceptor();
 
     public OfficeSystemGUI() {
         // Setup GUI components
@@ -95,9 +97,15 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
         add(temperaturePanel, BorderLayout.SOUTH);
 
         // Initialize GRPC Channels and Stubs
-        registryChannel = ManagedChannelBuilder.forAddress("localhost", 50058).usePlaintext().build();
-        securityChannel = ManagedChannelBuilder.forAddress("localhost", 50059).usePlaintext().build();
-        tempChannel = ManagedChannelBuilder.forAddress("localhost", 50060).usePlaintext().build();
+        registryChannel = ManagedChannelBuilder.forAddress("localhost", 50058).
+                usePlaintext().intercept(authInterceptor).build();
+
+        securityChannel = ManagedChannelBuilder.forAddress("localhost", 50059).
+                usePlaintext().intercept(authInterceptor).build();
+
+        tempChannel = ManagedChannelBuilder.forAddress("localhost", 50060).
+                usePlaintext().intercept(authInterceptor).
+                build();
 
         registryasyncStub = RegistryServiceGrpc.newStub(registryChannel);
         securityasyncStub = SecurityServiceGrpc.newStub(securityChannel);
@@ -308,4 +316,28 @@ public class OfficeSystemGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(OfficeSystemGUI::new);
     }
-}
+    //Inteceptor Implementation to add authentication to the grpc request
+    public static class AuthClientInterceptor implements ClientInterceptor {
+
+        //Defining authorisation key and token to be used
+        private static final String AUTHORIZATION_HEADER = "Authorization";
+        private static final String TOKEN = "Office-System-token";
+
+        @Override
+        public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(
+                MethodDescriptor<ReqT, RespT> method,
+                CallOptions callOptions,
+                Channel next) {
+            //Creating new client call
+            ClientCall<ReqT, RespT> call = next.newCall(method, callOptions);
+            //Returning a forwarding call to add the authentication headers
+            return new ForwardingClientCall.SimpleForwardingClientCall<ReqT, RespT>(call) {
+                @Override
+                public void start(Listener<RespT> responseListener, Metadata headers) {
+                    // Add the authorization header
+                    headers.put(Metadata.Key.of(AUTHORIZATION_HEADER, Metadata.ASCII_STRING_MARSHALLER), TOKEN);
+                    super.start(responseListener, headers);
+                }
+            };
+        }
+}}

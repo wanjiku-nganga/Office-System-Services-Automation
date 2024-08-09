@@ -4,8 +4,11 @@ import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 import java.io.IOException;
 import java.net.InetAddress;
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
+
+import io.grpc.*;
+
 /**
  * @author Sylvia
  */
@@ -16,12 +19,14 @@ import io.grpc.ServerBuilder;
 * discovery method defined in th GUI
 * */
 public class ServerStarter {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        //Creating an instance of the authenticator
+        AuthInterceptor authInterceptor = new AuthInterceptor();
         try {
             // Starting Security Server
             SecurityServer securityServer = new SecurityServer();
             Server security = ServerBuilder.forPort(50059)
-                    .addService(securityServer)
+                    .addService(ServerInterceptors.intercept(securityServer, authInterceptor))
                     .build()
                     .start();
             System.out.println("Security Server started on port 50059");
@@ -29,7 +34,7 @@ public class ServerStarter {
             // Starting Temperature Server
             TemperatureServer temperatureServer = new TemperatureServer();
             Server temperature = ServerBuilder.forPort(50060)
-                    .addService(temperatureServer)
+                    .addService(ServerInterceptors.intercept(temperatureServer, authInterceptor))
                     .build()
                     .start();
             System.out.println("Temperature Server started on port 50060");
@@ -37,7 +42,7 @@ public class ServerStarter {
             // Starting Registry Server
             RegistryServer registryServer = new RegistryServer();
             Server registry = ServerBuilder.forPort(50058)
-                    .addService(registryServer)
+                    .addService(ServerInterceptors.intercept(registryServer, authInterceptor))
                     .build()
                     .start();
             System.out.println("Registry Server started on port 50058");
@@ -57,13 +62,71 @@ public class ServerStarter {
             System.out.println("All services have been registered with JmDNS");
 
             // Keep servers running
-            security.awaitTermination();
-            temperature.awaitTermination();
-            registry.awaitTermination();
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Services have been stopped \n Shutting down servers...");
 
-            //Error handling 
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+                if (securityServer != null) {
+                    security.shutdown();  // Initiate graceful shutdown
+                    try {
+                        // Wait for 30 seconds max for the server to terminate
+                        if (!security.awaitTermination(30, TimeUnit.SECONDS)) {
+                            security.shutdownNow();  // Force shutdown if not terminated in time
+                        }
+                    } catch (InterruptedException e) {
+                        security.shutdownNow();
+                    }
+                }
+
+                if (temperature != null) {
+                    temperature.shutdown();
+                    try {
+                        if (!temperature.awaitTermination(30, TimeUnit.SECONDS)) {
+                            temperature.shutdownNow();
+                        }
+                    } catch (InterruptedException e) {
+                        temperature.shutdownNow();
+                    }
+                }
+
+                if (registry != null) {
+                    registry.shutdown();
+                    try {
+                        if (!registry.awaitTermination(30, TimeUnit.SECONDS)) {
+                            registry.shutdownNow();
+                        }
+                    } catch (InterruptedException e) {
+                        registry.shutdownNow();
+                    }
+                }
+
+            }));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    //Inteceptor Implementation to add authentication to the grpc request
+    public static class AuthInterceptor implements ServerInterceptor {
+
+        //Defining authorisation key and token to be used
+        private static final String AUTHORIZATION_HEADER = "Authorization";
+        private static final String EXPECTED_TOKEN = "Office-System-token";
+
+        @Override
+        public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
+                ServerCall<ReqT, RespT> call,
+                Metadata headers,
+                ServerCallHandler<ReqT, RespT> next) {
+
+            String authHeader = headers.get(Metadata.Key.of(AUTHORIZATION_HEADER, Metadata.ASCII_STRING_MARSHALLER));
+            if (authHeader == null || !authHeader.equals(EXPECTED_TOKEN)) {
+                call.close(Status.UNAUTHENTICATED.withDescription("Invalid credentials"), new Metadata());
+                return new ServerCall.Listener<ReqT>() {};
+            }
+
+            return next.startCall(call, headers);
         }
     }
 }
+
+
+

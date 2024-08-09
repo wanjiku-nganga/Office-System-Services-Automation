@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import generated.Temperature.*;
+import io.grpc.Metadata;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -16,6 +17,7 @@ import javax.jmdns.ServiceInfo;
  * @author Sylvia
  */
 public class TemperatureServer extends TemperatureServiceGrpc.TemperatureServiceImplBase{
+
     public static void main(String[] args) {
         //Server Definition
         TemperatureServer temperatureServer=new TemperatureServer();
