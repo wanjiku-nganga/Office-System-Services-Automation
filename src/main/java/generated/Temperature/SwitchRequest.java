@@ -16,7 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private SwitchRequest() {
-    lightOnOff_ = false;
+    onOff_ = false;
   }
 
   @java.lang.Override
@@ -45,7 +45,7 @@ private static final long serialVersionUID = 0L;
             break;
           case 8: {
 
-            lightOnOff_ = input.readBool();
+            onOff_ = input.readBool();
             break;
           }
           default: {
@@ -80,13 +80,13 @@ private static final long serialVersionUID = 0L;
             generated.Temperature.SwitchRequest.class, generated.Temperature.SwitchRequest.Builder.class);
   }
 
-  public static final int LIGHTONOFF_FIELD_NUMBER = 1;
-  private boolean lightOnOff_;
+  public static final int ONOFF_FIELD_NUMBER = 1;
+  private boolean onOff_;
   /**
-   * <code>bool lightOnOff = 1;</code>
+   * <code>bool OnOff = 1;</code>
    */
-  public boolean getLightOnOff() {
-    return lightOnOff_;
+  public boolean getOnOff() {
+    return onOff_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -103,8 +103,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (lightOnOff_ != false) {
-      output.writeBool(1, lightOnOff_);
+    if (onOff_ != false) {
+      output.writeBool(1, onOff_);
     }
     unknownFields.writeTo(output);
   }
@@ -115,9 +115,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (lightOnOff_ != false) {
+    if (onOff_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(1, lightOnOff_);
+        .computeBoolSize(1, onOff_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -135,8 +135,8 @@ private static final long serialVersionUID = 0L;
     generated.Temperature.SwitchRequest other = (generated.Temperature.SwitchRequest) obj;
 
     boolean result = true;
-    result = result && (getLightOnOff()
-        == other.getLightOnOff());
+    result = result && (getOnOff()
+        == other.getOnOff());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -148,9 +148,9 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + LIGHTONOFF_FIELD_NUMBER;
+    hash = (37 * hash) + ONOFF_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getLightOnOff());
+        getOnOff());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -284,7 +284,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      lightOnOff_ = false;
+      onOff_ = false;
 
       return this;
     }
@@ -312,7 +312,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public generated.Temperature.SwitchRequest buildPartial() {
       generated.Temperature.SwitchRequest result = new generated.Temperature.SwitchRequest(this);
-      result.lightOnOff_ = lightOnOff_;
+      result.onOff_ = onOff_;
       onBuilt();
       return result;
     }
@@ -361,8 +361,8 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(generated.Temperature.SwitchRequest other) {
       if (other == generated.Temperature.SwitchRequest.getDefaultInstance()) return this;
-      if (other.getLightOnOff() != false) {
-        setLightOnOff(other.getLightOnOff());
+      if (other.getOnOff() != false) {
+        setOnOff(other.getOnOff());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -393,28 +393,28 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private boolean lightOnOff_ ;
+    private boolean onOff_ ;
     /**
-     * <code>bool lightOnOff = 1;</code>
+     * <code>bool OnOff = 1;</code>
      */
-    public boolean getLightOnOff() {
-      return lightOnOff_;
+    public boolean getOnOff() {
+      return onOff_;
     }
     /**
-     * <code>bool lightOnOff = 1;</code>
+     * <code>bool OnOff = 1;</code>
      */
-    public Builder setLightOnOff(boolean value) {
+    public Builder setOnOff(boolean value) {
       
-      lightOnOff_ = value;
+      onOff_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bool lightOnOff = 1;</code>
+     * <code>bool OnOff = 1;</code>
      */
-    public Builder clearLightOnOff() {
+    public Builder clearOnOff() {
       
-      lightOnOff_ = false;
+      onOff_ = false;
       onChanged();
       return this;
     }

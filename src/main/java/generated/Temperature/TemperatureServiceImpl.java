@@ -43,18 +43,18 @@ public final class TemperatureServiceImpl {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\021Temperature.proto\022\013Temperature\"#\n\rSwit" +
-      "chRequest\022\022\n\nlightOnOff\030\001 \001(\010\"9\n\025SwitchR" +
-      "equestResponse\022\017\n\007degrees\030\001 \001(\005\022\017\n\007measu" +
-      "re\030\002 \001(\t\" \n\nSetRequest\022\022\n\ntempNumber\030\001 \001" +
-      "(\005\"-\n\022SetRequestResponse\022\027\n\017SettempRespo" +
-      "nse\030\001 \001(\t2\270\001\n\022TemperatureService\022T\n\016getT" +
-      "emperature\022\032.Temperature.SwitchRequest\032\"" +
-      ".Temperature.SwitchRequestResponse\"\0000\001\022L" +
-      "\n\016setTemperature\022\027.Temperature.SetReques" +
-      "t\032\037.Temperature.SetRequestResponse\"\000B1\n\025" +
-      "generated.TemperatureB\026TemperatureServic" +
-      "eImplP\001b\006proto3"
+      "\n\021Temperature.proto\022\013Temperature\"\036\n\rSwit" +
+      "chRequest\022\r\n\005OnOff\030\001 \001(\010\"9\n\025SwitchReques" +
+      "tResponse\022\017\n\007degrees\030\001 \001(\005\022\017\n\007measure\030\002 " +
+      "\001(\t\" \n\nSetRequest\022\022\n\ntempNumber\030\001 \001(\005\"-\n" +
+      "\022SetRequestResponse\022\027\n\017SettempResponse\030\001" +
+      " \001(\t2\270\001\n\022TemperatureService\022T\n\016getTemper" +
+      "ature\022\032.Temperature.SwitchRequest\032\".Temp" +
+      "erature.SwitchRequestResponse\"\0000\001\022L\n\016set" +
+      "Temperature\022\027.Temperature.SetRequest\032\037.T" +
+      "emperature.SetRequestResponse\"\000B1\n\025gener" +
+      "ated.TemperatureB\026TemperatureServiceImpl" +
+      "P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -73,7 +73,7 @@ public final class TemperatureServiceImpl {
     internal_static_Temperature_SwitchRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Temperature_SwitchRequest_descriptor,
-        new java.lang.String[] { "LightOnOff", });
+        new java.lang.String[] { "OnOff", });
     internal_static_Temperature_SwitchRequestResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Temperature_SwitchRequestResponse_fieldAccessorTable = new

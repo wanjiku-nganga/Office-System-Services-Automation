@@ -4,6 +4,10 @@
 package generated.Security;
 
 /**
+ * <pre>
+ *Lock request response message
+ * </pre>
+ *
  * Protobuf type {@code Security.LockRequestResponse}
  */
 public  final class LockRequestResponse extends
@@ -279,6 +283,10 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   *Lock request response message
+   * </pre>
+   *
    * Protobuf type {@code Security.LockRequestResponse}
    */
   public static final class Builder extends

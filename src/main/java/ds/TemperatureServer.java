@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import generated.Temperature.*;
-import io.grpc.Metadata;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;

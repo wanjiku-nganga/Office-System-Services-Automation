@@ -21,7 +21,7 @@ service TemperatureService {
 
 message SwitchRequest {
 
-  bool lightOnOff = 1;
+  bool OnOff = 1;
 
 }
 

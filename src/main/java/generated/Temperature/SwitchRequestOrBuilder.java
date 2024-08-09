@@ -8,7 +8,7 @@ public interface SwitchRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bool lightOnOff = 1;</code>
+   * <code>bool OnOff = 1;</code>
    */
-  boolean getLightOnOff();
+  boolean getOnOff();
 }

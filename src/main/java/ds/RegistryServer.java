@@ -1,23 +1,16 @@
 package ds;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
-
-import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
-
 import  generated.Registry.RegistryServiceGrpc;
 import generated.Registry.UploadRequest;
 import generated.Registry.UploadResponse;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
-
-
 /**
  * @author Sylvia
  */
@@ -72,10 +65,9 @@ public class RegistryServer extends RegistryServiceGrpc.RegistryServiceImplBase 
             public void onError(Throwable t) {
                 t.printStackTrace();
             }
+
             //Method to send back a response to the client when
             //Upload is completed successfully
-
-
             public void onCompleted() {
                 UploadResponse response = UploadResponse.newBuilder().setValidation("Upload Success").build();
                 responseObserver.onNext(response);

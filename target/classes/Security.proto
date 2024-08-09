@@ -16,23 +16,25 @@ service SecurityService {
 
 }
 
-
+//Lock request parameters
 message LockRequest{
   int32 doorID = 1;
   string location = 2;
 }
 
+//Lock request response message
 message LockRequestResponse{
 
   string status = 1;//shows the "Door Locked "
 }
+
 //Message for unlock request
 message UnlockRequest{
   int32 doorID = 1;
   string location = 2;
 }
 
-//Message for unlock request
+//Message for unlock response
 message UnlockRequestResponse{
 
   string status = 1;//shows the "Door is unlocked "

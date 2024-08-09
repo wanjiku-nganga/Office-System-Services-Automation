@@ -5,7 +5,7 @@ package generated.Security;
 
 /**
  * <pre>
- *Message for unlock request
+ *Message for unlock response
  * </pre>
  *
  * Protobuf type {@code Security.UnlockRequestResponse}
@@ -284,7 +284,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   *Message for unlock request
+   *Message for unlock response
    * </pre>
    *
    * Protobuf type {@code Security.UnlockRequestResponse}

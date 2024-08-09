@@ -123,7 +123,7 @@ public class SecurityServer extends SecurityServiceGrpc.SecurityServiceImplBase 
             return;
         }
 
-        // Simulate some processing time
+        // Giving processing time
         try {
             // Simulating processing delay
             TimeUnit.SECONDS.sleep(1);

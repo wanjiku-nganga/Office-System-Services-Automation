@@ -4,6 +4,10 @@
 package generated.Security;
 
 /**
+ * <pre>
+ *Lock request parameters
+ * </pre>
+ *
  * Protobuf type {@code Security.LockRequest}
  */
 public  final class LockRequest extends
@@ -297,6 +301,10 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   *Lock request parameters
+   * </pre>
+   *
    * Protobuf type {@code Security.LockRequest}
    */
   public static final class Builder extends
